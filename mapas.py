@@ -18,9 +18,18 @@ from Scripts.Mapa.funciones import lista_coordenadas
 
 productores = extraccion_escenarios('arroz')
 
-
 # Crear el mapa de Folium, en un punto central y el zoom con el que queremos comenzar viendo el mapa
-mapa = folium.Map(location=[19.432608, -99.133209], zoom_start=5)
+mapa = folium.Map(location=[19.432608, -99.133209], zoom_start=5, tiles=None) # tiles es para no mostrar el mapa predeterminado
+
+# Cargar y añadir el archivo GeoJSON al mapa
+geojson_path = 'Data/geo_estados.json'
+folium.GeoJson(
+    geojson_path,
+    name='geojson'
+).add_to(mapa)
+
+# Añadir control de capas
+folium.LayerControl().add_to(mapa)
 
 # Añadir marcadores para cada ubicación en la lista de coordenadas, la lista de coordenadas la podemos obtener
 # Con la función lista_coordenadas ( solo funciona con a estructura de los DataFrames que tenemos).
@@ -28,7 +37,7 @@ for  nombre, municipio, lat, lon in lista_coordenadas(productores):
     folium.Marker(
         location=[lat, lon],
         popup= [nombre,municipio],
-        icon= folium.Icon(icon='info-sign')  # Definimos un icono predeterminado 
+        icon= folium.Icon(icon='cloud')  # Definimos un icono predeterminado  #info-sign icon predeterminado
         #icon= folium.CustomIcon('assets/prueba_2.png') #Podemos elegir algún icono que tengamos previamente descargado
     ).add_to(mapa)
 
